@@ -108,6 +108,34 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+void checkFile(string comName) {
+	if (isFile() == true) {
+		    ifstream inFile;
+			inFile.open(ACTIVATIONFILENAME);
+			string line;
+			if (inFile.is_open())
+			{
+				while (getline(inFile, line))
+				{
+					cout << line << '\n';
+					if (line == comName) {
+						// activation() 
+					}
+					else {
+						exit(0);
+					}
+				}
+				inFile.close();
+			}
+
+	}
+	else
+		// activation()
+}
+inline bool isFile() {
+	ifstream f(ACTIVATIONFILENAME);
+	return f.good();
+}
 
 
 void cleanup(SOCKET socket)
