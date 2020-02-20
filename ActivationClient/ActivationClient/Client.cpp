@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+
 using namespace std;
 
 // Make sure build environment links to Winsock library file
@@ -25,7 +26,8 @@ void cleanup(SOCKET socket);
 
 int main(int argc, char* argv[])
 {
-	WSADATA		wsaData;			// structure to hold info about Windows sockets implementation
+	WSADATA		wsaData;			// structure to hold info a
+	// bout Windows sockets implementation
 	SOCKET		mySocket;			// socket for communication with the server
 	SOCKADDR_IN	serverAddr;			// structure to hold server address information
 	string		ipAddress;			// server's IP address

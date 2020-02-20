@@ -36,6 +36,10 @@ int main(int argc, char *argv[]) {
     bool done;                  // variable to control communication loop
     bool moreData;              // variable to control receive data loop
     ofstream MyFile;            // variable for data file
+    bool activation;            // variable to control activation loop
+    string bufferString;
+    string serialString;
+    string machineString;
 
     MyFile.open(DATAFILENAME, ios::out);
 
@@ -154,16 +158,39 @@ int main(int argc, char *argv[]) {
 
         } while (moreData);
 
-        if (input == "1234")
-            cout << "Serial Number: " << input << GOODMSG << endl;
-            MyFile
-        else
-            cout << "Serial Number: " << input << BADMSG << endl;
+        activation = false;
+        while (!activation) {
+            bufferString = buffer.substr(0, buffer.size() - 1);
+            serialString = buffer.substr(0, 4);
+            machineString = buffer.substr(4, 4);
+            // both Serial Number and Machine ID are good
+            if ((buffer == "1234abcd\0") || (buffer == "4567qwer\0")) {
+                cout << "Serial number: " << serialString << GOODMSG << endl;
+                MyFile << "Serial number: " << serialString << "\n";
+                cout << "Machine ID: " << machineString << GOODMSG << endl;
+                MyFile << "Machine ID: " << machineString << "\n";
+                activation = true;
+            }
+                // Serial Number is good but Machine ID is bad
+            else if ((serialString == "1234" && machineString != "abcd") ||
+                     (serialString == "4567" && machineString != "qwer")) {
+                cout << "Serial number: " << serialString << GOODMSG << endl;
+                cout << "Machine ID: " << machineString << BADMSG << endl;
+            }
+                // Serial Number is bad but Machine ID is good
+            else if ((serialString != "1234" && machineString == "abcd") ||
+                     (serialString != "4567" && machineString == "qwer")) {
+                cout << "Serial number: " << serialString << BADMSG << endl;
+                cout << "Machine ID: " << machineString << GOODMSG << endl;
+            }
+                // Serial Number is bad and Machine ID is bad
+            else if ((serialString != "1234" && machineString != "abcd") ||
+                     (serialString != "4567" && machineString != "qwer")) {
+                cout << "Serial number: " << serialString << BADMSG << endl;
+                cout << "Machine ID: " << machineString << BADMSG << endl;
+            }
 
-        if (input == "abcd")
-            cout << "Machine ID: " << input << GOODMSG << endl;
-        else
-            cout << "Machine ID: " << input << BADMSG << endl;
+        }
 
         cout << "Recv > " << input << endl;
 
