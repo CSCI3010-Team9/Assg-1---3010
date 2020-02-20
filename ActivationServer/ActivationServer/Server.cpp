@@ -22,6 +22,8 @@ using namespace std;
 // Function to close the specified socket and perform DLL cleanup (WSACleanup)
 void cleanup(SOCKET socket);
 
+string convertToString(char* a, int size);
+
 
 int main(int argc, char *argv[]) {
     WSADATA wsaData;            // structure to hold info about Windows sockets implementation
@@ -37,16 +39,17 @@ int main(int argc, char *argv[]) {
     bool moreData;              // variable to control receive data loop
     ofstream MyFile;            // variable for data file
     bool activation;            // variable to control activation loop
-    string bufferString;
-    string serialString;
-    string machineString;
+    string bufferString;        // string from buffer array
+    string serialString;        // substring of bufferString for Serial Number
+    string machineString;       // substring of bufferString for Machine ID
+    int bufferLength;           // length of buffer to be passed to convertToString
 
     MyFile.open(DATAFILENAME, ios::out);
 
     cout << "\n*** CHAT SERVER ***\n" << endl;
 
     // Get server address information from user
-    cout << "Enter IP address (press enter for localhost): "
+    cout << "Enter IP address (press enter for localhost): ";
     getline(cin, ipAddress);
     if (ipAddress == "")
         ipAddress = "127.0.0.1";
@@ -55,7 +58,7 @@ int main(int argc, char *argv[]) {
 
     // Get server port number from user
     cout << "Enter port number (press enter for the default port): " << endl;
-    getline(cin, input)
+    getline(cin, input);
     if (input == "")
         port = DEFAULTPORT;
     else
@@ -160,9 +163,10 @@ int main(int argc, char *argv[]) {
 
         activation = false;
         while (!activation) {
-            bufferString = buffer.substr(0, buffer.size() - 1);
-            serialString = buffer.substr(0, 4);
-            machineString = buffer.substr(4, 4);
+            bufferLength = sizeof(buffer) / sizeof(buffer[0]);
+            bufferString = convertToString(buffer, bufferLength);
+            serialString = bufferString.substr(0, 4);
+            machineString = bufferString.substr(4, 4);
             // both Serial Number and Machine ID are good
             if ((buffer == "1234abcd\0") || (buffer == "4567qwer\0")) {
                 cout << "Serial number: " << serialString << GOODMSG << endl;
@@ -224,7 +228,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-}
+
 
 
 void cleanup(SOCKET socket) {
@@ -232,4 +236,15 @@ void cleanup(SOCKET socket) {
         closesocket(socket);
 
     WSACleanup();
+}
+
+
+string convertToString(char* a, int size)
+{
+    int i;
+    string s = "";
+    for (i = 0; i < size; i++) {
+        s = s + a[i];
+    }
+    return s;
 }
