@@ -33,7 +33,7 @@ bool		activation;			// variable to control activation loop
 // Function to close the specified socket and perform DLL cleanup (WSACleanup)
 void cleanup(SOCKET socket);
 
-int provideInfo(int computerName) {
+int provideInfo(string computerName) {
 
 
 	// Loop to communicate with server until either side types "end"
@@ -52,7 +52,9 @@ int provideInfo(int computerName) {
 
 		cout << "Send serial number and computerName(serialNumber computerName)> ";
 
-		getline(cin, input);
+		string input3;
+		cin >> input3;
+
 
 		iResult = send(mySocket, input.c_str(), (int)input.size() + 1, 0);
 
@@ -127,7 +129,7 @@ int provideInfo(int computerName) {
 			cout << "Recv > " << input << endl;
 
 			if (input == GOODMSG) {
-				return 0;
+				return 2;
 			}
 
 			else {
@@ -140,6 +142,54 @@ int provideInfo(int computerName) {
 
 
 	} while (!done);
+}
+
+inline bool isFile() {
+	ifstream f(ACTIVATIONFILENAME);
+	return f.good();
+}
+void printInfile(string CNum) {
+	ofstream inFile;
+	inFile.open(ACTIVATIONFILENAME);
+	inFile << CNum;
+	inFile.close();
+
+}
+void checkFile(string comName) {
+	if (isFile() == true) {
+		ifstream inFile;
+		inFile.open(ACTIVATIONFILENAME);
+		string line;
+		if (inFile.is_open())
+		{
+			while (getline(inFile, line))
+			{
+				cout << line << '\n';
+				if (line == comName) {
+					if (provideInfo(comName) == 2) {
+						printInfile(comName);
+					}
+					else {
+						exit(0);
+					}
+				}
+				else {
+					exit(0);
+				}
+			}
+			inFile.close();
+		}
+
+	}
+	else {
+		if (provideInfo(comName) == 2) {
+			printInfile(comName);
+		}
+		else {
+			exit(0);
+		}
+	}
+
 }
 
 
@@ -207,41 +257,15 @@ int main(int argc, char* argv[])
 
 	cout << "Connected...\n\n";
 
-	
+	cout << "Enter MachineID (digits only)";
+	string input2;
+	cin >> input2;
+
+
+	checkFile(input2);
+
 
 		return 0;
-}
-
-inline bool isFile() {
-	ifstream f(ACTIVATIONFILENAME);
-	return f.good();
-}
-
-void checkFile(string comName) {
-	if (isFile() == true) {
-		ifstream inFile;
-		inFile.open(ACTIVATIONFILENAME);
-		string line;
-		if (inFile.is_open())
-		{
-			while (getline(inFile, line))
-			{
-				cout << line << '\n';
-				if (line == comName) {
-					// activation() 
-				}
-				else {
-					exit(0);
-				}
-			}
-			inFile.close();
-		}
-
-	}
-	else {
-
-	}
-	// activation()
 }
 
 

@@ -138,6 +138,7 @@ int main(int argc, char *argv[]) {
         moreData = false;
         do {
             iResult = recv(clientSocket, buffer, BUFFERSIZE - 1, 0);
+			cout << buffer<< "\n";
 
             if (iResult > 0) {
                 // Received data; need to determine if there's more coming
@@ -163,6 +164,7 @@ int main(int argc, char *argv[]) {
 
         activation = false;
         while (!activation) {
+			cout << buffer << "2\n";
             bufferLength = sizeof(buffer) / sizeof(buffer[0]);
             bufferString = convertToString(buffer, bufferLength);
             serialString = bufferString.substr(0, 4);
