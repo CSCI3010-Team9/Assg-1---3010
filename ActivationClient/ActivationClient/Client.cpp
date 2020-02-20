@@ -167,14 +167,15 @@ void checkFile(string comName) {
 				cout << line << '\n';
 				if (line == comName) {
 					if (provideInfo(comName) == 2) {
+						cout << "ava";
 						printInfile(comName);
 					}
 					else {
-						exit(0);
+						//exit(0);
 					}
 				}
 				else {
-					exit(0);
+					//exit(0);
 				}
 			}
 			inFile.close();
@@ -184,9 +185,10 @@ void checkFile(string comName) {
 	else {
 		if (provideInfo(comName) == 2) {
 			printInfile(comName);
+			cout << "ava";
 		}
 		else {
-			exit(0);
+			//exit(0);
 		}
 	}
 

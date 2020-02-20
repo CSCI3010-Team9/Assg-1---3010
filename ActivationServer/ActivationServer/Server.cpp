@@ -10,6 +10,7 @@ using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 
 
+
 // Define default global constants
 #define BUFFERSIZE 256
 #define DATAFILENAME "dataFile.txt"
@@ -169,8 +170,9 @@ int main(int argc, char *argv[]) {
             bufferString = convertToString(buffer, bufferLength);
             serialString = bufferString.substr(0, 4);
             machineString = bufferString.substr(4, 4);
+			
             // both Serial Number and Machine ID are good
-            if ((buffer == "1234abcd\0") || (buffer == "4567qwer\0")) {
+            if ((bufferString == "1234abcd\0") || (bufferString == "4567qwer\0")) {
                 cout << "Serial number: " << serialString << GOODMSG << endl;
                 MyFile << "Serial number: " << serialString << "\n";
                 cout << "Machine ID: " << machineString << GOODMSG << endl;
@@ -182,19 +184,27 @@ int main(int argc, char *argv[]) {
                      (serialString == "4567" && machineString != "qwer")) {
                 cout << "Serial number: " << serialString << GOODMSG << endl;
                 cout << "Machine ID: " << machineString << BADMSG << endl;
+				break;
             }
                 // Serial Number is bad but Machine ID is good
             else if ((serialString != "1234" && machineString == "abcd") ||
                      (serialString != "4567" && machineString == "qwer")) {
                 cout << "Serial number: " << serialString << BADMSG << endl;
                 cout << "Machine ID: " << machineString << GOODMSG << endl;
+				break;
             }
                 // Serial Number is bad and Machine ID is bad
             else if ((serialString != "1234" && machineString != "abcd") ||
                      (serialString != "4567" && machineString != "qwer")) {
                 cout << "Serial number: " << serialString << BADMSG << endl;
                 cout << "Machine ID: " << machineString << BADMSG << endl;
+				break;
+
             }
+			else {
+
+				cout<< "none";
+			}
 
         }
 
