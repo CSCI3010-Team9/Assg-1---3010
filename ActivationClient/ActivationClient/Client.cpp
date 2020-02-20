@@ -56,7 +56,7 @@ int provideInfo(string computerName) {
 		cin >> input3;
 
 
-		iResult = send(mySocket, input.c_str(), (int)input.size() + 1, 0);
+		iResult = send(mySocket, input3.c_str(), (int)input3.size() + 1, 0);
 
 		if (iResult == SOCKET_ERROR)
 		{
