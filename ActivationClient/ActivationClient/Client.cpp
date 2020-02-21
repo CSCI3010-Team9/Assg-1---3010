@@ -90,7 +90,7 @@ int provideInfo(string computerName) {
 			do
 			{
 				iResult = recv(mySocket, buffer, BUFFERSIZE - 1, 0);
-
+				cout << buffer << "2\n";
 				if (iResult > 0)
 				{
 					// Received data; need to determine if there's more coming                                                        
@@ -103,6 +103,13 @@ int provideInfo(string computerName) {
 					// Concatenate received data onto end of string we're building
 
 					input = input + (string)buffer;
+					if (input == GOODMSG) {
+						return 2;
+					}
+
+					else {
+						return -1;
+					}
 
 				}
 
@@ -150,7 +157,7 @@ inline bool isFile() {
 }
 void printInfile(string CNum) {
 	ofstream inFile;
-	inFile.open(ACTIVATIONFILENAME);
+	inFile.open(ACTIVATIONFILENAME, ios::out);
 	inFile << CNum;
 	inFile.close();
 
@@ -165,17 +172,17 @@ void checkFile(string comName) {
 			while (getline(inFile, line))
 			{
 				cout << line << '\n';
-				if (line == comName) {
+				if (line != comName) {
 					if (provideInfo(comName) == 2) {
 						cout << "ava";
 						printInfile(comName);
 					}
 					else {
-						//exit(0);
+						exit(0);
 					}
 				}
 				else {
-					//exit(0);
+					exit(0);
 				}
 			}
 			inFile.close();
@@ -188,7 +195,9 @@ void checkFile(string comName) {
 			cout << "ava";
 		}
 		else {
-			//exit(0);
+			exit(0);
+			cout << "noe";
+
 		}
 	}
 
@@ -265,8 +274,9 @@ int main(int argc, char* argv[])
 
 
 	checkFile(input2);
-
-
+	cout << "Enter MachineID (digits only)";
+	
+	cin >> input2;
 		return 0;
 }
 
